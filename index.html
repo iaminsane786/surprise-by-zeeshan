@@ -11,43 +11,59 @@
       font-family: Arial, sans-serif;
       background-size: cover;
       background-position: center;
-      color: black; /* sabhi text black */
+      color: black;
+      overflow: hidden;
     }
+
     .content {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       width: 90%;
-      font-size: 28px; /* bada text */
     }
+
+    h1, p {
+      font-size: 40px;
+      font-weight: bold;
+      color: black;
+    }
+
     .btn {
-      margin: 10px;
-      padding: 15px 30px;
-      background: #ff4d6d;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 22px;
+      margin: 20px;
+      padding: 20px 40px;
+      background: transparent;
+      border: 4px solid red;
+      border-radius: 15px;
+      color: red;
+      font-size: 30px;
+      font-weight: bold;
       cursor: pointer;
     }
+
     .popup {
       position: absolute;
-      background: rgba(0,0,0,0.8);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      font-size: 22px;
+      background: rgba(255,255,255,0.95);
+      color: black;
+      padding: 30px;
+      border-radius: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      display: none;
+      z-index: 1000;
     }
+
     .heart {
       position: fixed;
-      font-size: 60px;
-      opacity: 0.6;
-      animation: float 4s linear infinite;
+      font-size: 80px;
+      animation: float 6s linear infinite alternate;
+      z-index: 0;
     }
+
     @keyframes float {
-      from { transform: translateY(100vh); }
-      to { transform: translateY(-10vh); }
+      0% { transform: translateY(100vh) rotate(0deg); }
+      50% { transform: translateY(-10vh) rotate(180deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
     }
   </style>
 </head>
@@ -56,7 +72,18 @@
 
   <script>
     let audio;
-    let allPopups = []; // Step 1 ke popups yahan store honge
+    let step1Popups = [];
+
+    // ❤️ Dil background me continuously
+    function spawnHearts(){
+      setInterval(()=>{
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="❤️";
+        heart.style.left=Math.random()*90+"vw";
+        document.body.appendChild(heart);
+      },1000);
+    }
 
     // Step 1
     function showStep1() {
@@ -73,17 +100,17 @@
       popup.className = "popup";
       popup.style.top = "40%";
       popup.style.left = "40%";
-      popup.innerHTML = "Pls choose HAAN na my red rose 🌹";
+      popup.innerHTML = "Pls choose HAAN na meri red rose 🌹";
       document.body.appendChild(popup);
+      popup.style.display = "block";
       setTimeout(() => popup.remove(), 2000);
     }
 
-    // Yes popups (6 times)
     const yesMsgs = [
       {msg:"Sach me?",btn:"HAAN"},
       {msg:"Wakai me na?",btn:"HAAN"},
-      {msg:"Dekhogi na?",btn:"Haan g jrur"},
-      {msg:"Itni bi kya jaldi h 😁",btn:"Haan g jrur"},
+      {msg:"Dekhogi na?",btn:"HAAN g jrur"},
+      {msg:"Itni bi kya jaldi h 😁",btn:"HAAN g jrur"},
       {msg:"Uff ye Zeeshan bi na pagal krwa dega tumhe 🥲",btn:"Next"},
       {msg:"Chalo itna click kr rhe ho to dikha hi deta hun",btn:"Next"}
     ];
@@ -95,21 +122,29 @@
         popup.style.top = Math.random()*70+"%";
         popup.style.left = Math.random()*70+"%";
         popup.innerHTML = yesMsgs[index].msg + 
-          `<br><button class="btn" onclick="handleYes(${index})">${yesMsgs[index].btn}</button>`;
+          `<br><button class="btn" onclick="yesNext(${index}, this)">${yesMsgs[index].btn}</button>`;
         document.body.appendChild(popup);
-        allPopups.push(popup);
+        popup.style.display = "block";
+        step1Popups.push(popup);
+      } else {
+        closeStep1Popups();
+        showStep2();
       }
     }
 
-    function handleYes(index){
-      if(index < yesMsgs.length - 1){
+    function yesNext(index, btn){
+      btn.parentElement.style.display="none";
+      if(index+1 < yesMsgs.length){
         yesPopups(index+1);
       } else {
-        // saare popups remove kardo
-        allPopups.forEach(p => p.remove());
-        allPopups = [];
+        closeStep1Popups();
         showStep2();
       }
+    }
+
+    function closeStep1Popups(){
+      step1Popups.forEach(p=>p.remove());
+      step1Popups = [];
     }
 
     // Step 2
@@ -118,7 +153,7 @@
       document.body.style.backgroundImage = "url('bg_step2.jpg')";
       document.getElementById("main").innerHTML = `
         <img src="center_step2.jpg" width="500"><br>
-        <p>Pehlee ek gaana sunlo meri Jasmine🌸 – GAAATA RHE MAJAA DILLLLL TUHI MAAJII MANJILLLLLL 🎵🎸</p>
+        <p>Pehlee ek gaana sunlo meri Jasmine🌸 – GAAATA RHE MAJAA DILLLLL 🎵🎸</p>
         <button class="btn" onclick="showStep3()">Next</button>
       `;
       playAudio('maja.mp3');
@@ -144,6 +179,7 @@
       popup.style.left = "40%";
       popup.innerHTML = "No No sochna pdega 😁";
       document.body.appendChild(popup);
+      popup.style.display = "block";
       setTimeout(()=>popup.remove(),3000);
     }
 
@@ -180,7 +216,7 @@
       setTimeout(showStep65,10000);
     }
 
-    // Step 6.5 (Question step)
+    // Step 6.5
     function showStep65(){
       stopAudio();
       document.body.style.backgroundImage = "url('bg_step6.5.jpg')";
@@ -216,9 +252,7 @@
       heart.className="heart";
       heart.innerHTML="❤️";
       heart.style.left=Math.random()*90+"vw";
-      heart.style.fontSize="70px";
       document.body.appendChild(heart);
-      setTimeout(()=>heart.remove(),4000);
     }
 
     // Step 7
@@ -231,15 +265,17 @@
       playAudio('pksong.mp3');
       setTimeout(()=>{
         document.getElementById("main").innerHTML=`
-          <video autoplay loop muted width="500">
+          <video autoplay loop muted width="600">
             <source src="final_video.mp4" type="video/mp4">
           </video>
-          <p>Hey Jasmine just wanted to say you I will fall for you in zero gravity also😅 You are a blessing for me blessed by Allah swt♥️ thank u for coming in my life and InshaAllah we will do nikah, Allah swt will help us Ameen✨</p>
+          <p>Hey Jasmine just wanted to say you I will fall for you in zero gravity also😅 
+          You are a blessing for me blessed by Allah swt♥️ thank u for coming in my life 
+          and InshaAllah we will do nikah, Allah swt will help us Ameen✨</p>
         `;
       },7000);
     }
 
-    // Helper: Play audio
+    // Audio helper
     function playAudio(file){
       stopAudio();
       audio=new Audio(file);
@@ -255,6 +291,7 @@
     }
 
     // Start
+    spawnHearts();
     showStep1();
   </script>
 </body>
