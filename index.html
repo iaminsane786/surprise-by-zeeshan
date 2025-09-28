@@ -93,9 +93,18 @@
         popup.className = "popup";
         popup.style.top = Math.random()*70+"%";
         popup.style.left = Math.random()*70+"%";
-        popup.innerHTML = yesMsgs[index].msg + `<br><button class="btn" onclick="popup.remove();yesPopups(${index+1})">${yesMsgs[index].btn}</button>`;
+        popup.innerHTML = `
+          ${yesMsgs[index].msg}<br>
+          <button class="btn">${yesMsgs[index].btn}</button>
+        `;
         document.body.appendChild(popup);
         popup.style.display = "block";
+
+        // ✅ pichla popup remove nahi hoga, har click par naya popup add hoga
+        let btn = popup.querySelector("button");
+        btn.onclick = function(){
+          yesPopups(index+1);
+        }
       } else {
         showStep2();
       }
