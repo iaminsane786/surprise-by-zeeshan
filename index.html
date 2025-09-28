@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Surprise by Zeeshan</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+    }
+    .btn {
+      margin: 10px;
+      padding: 10px 20px;
+      background: #ff4d6d;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .popup {
+      position: absolute;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+    }
+    .heart {
+      position: fixed;
+      font-size: 40px;
+      opacity: 0.6;
+      animation: float 4s linear infinite;
+    }
+    @keyframes float {
+      from { transform: translateY(100vh); }
+      to { transform: translateY(-10vh); }
+    }
+  </style>
+</head>
+<body>
+  <div class="content" id="main"></div>
+
+  <script>
+    let audio;
+
+    // Step 1
+    function showStep1() {
+      document.body.style.backgroundImage = "url('bg_step1.jpg')";
+      document.getElementById("main").innerHTML = `
+        <h1>Hey Jasmine 🌸 want a surprise ✨??</h1>
+        <button class="btn" onclick="noPopup()">No</button>
+        <button class="btn" onclick="yesPopups(0)">Yes</button>
+      `;
+    }
+
+    function noPopup() {
+      let popup = document.createElement("div");
+      popup.className = "popup";
+      popup.style.top = "40%";
+      popup.style.left = "40%";
+      popup.innerHTML = "Pls choose Yes na my red rose 🌹";
+      document.body.appendChild(popup);
+      popup.style.display = "block";
+      setTimeout(() => popup.remove(), 2000);
+    }
+
+    // Yes popups (6 times)
+    const yesMsgs = [
+      {msg:"Sach me?",btn:"Yes"},
+      {msg:"Wakai me na?",btn:"Yes"},
+      {msg:"Dekhogi na?",btn:"Han g jrur"},
+      {msg:"Itni bi kya jaldi h 😁",btn:"Han g jrur"},
+      {msg:"Uff ye Zeeshan bi na pagal krwa dega tumhe 🥲",btn:"Next"},
+      {msg:"Chalo itna click kr rhe ho to dikha hi deta hun",btn:"Next"}
+    ];
+
+    function yesPopups(index){
+      if(index < yesMsgs.length){
+        let popup = document.createElement("div");
+        popup.className = "popup";
+        popup.style.top = Math.random()*70+"%";
+        popup.style.left = Math.random()*70+"%";
+        popup.innerHTML = yesMsgs[index].msg + `<br><button class="btn" onclick="popup.remove();yesPopups(${index+1})">${yesMsgs[index].btn}</button>`;
+        document.body.appendChild(popup);
+        popup.style.display = "block";
+      } else {
+        showStep2();
+      }
+    }
+
+    // Step 2
+    function showStep2(){
+      stopAudio();
+      document.body.style.backgroundImage = "url('bg_step2.jpg')";
+      document.getElementById("main").innerHTML = `
+        <img src="center_step2.jpg" width="300"><br>
+        <p>Pehlee ek gaana sunlo meri Jasmine🌸 – GAAATA RHE MAJAA DILLLLL TUHI MAAJII MANJILLLLLL LA LA LA 🎵🎸</p>
+        <button class="btn" onclick="showStep3()">Next</button>
+      `;
+      playAudio('maja.mp3');
+    }
+
+    // Step 3
+    function showStep3(){
+      stopAudio();
+      document.body.style.backgroundImage = "url('bg_step3.jpg')";
+      document.getElementById("main").innerHTML = `
+        <img src="center_step3.jpg" width="300"><br>
+        <p>Pehle ek SMILE kro aur mujhe imagine kro 🌷 jaldi jaldi 😁.....<br> Krliya ??</p>
+        <button class="btn" onclick="noSmile()">No</button>
+        <button class="btn" onclick="showStep4()">Yes</button>
+      `;
+      playAudio('smile.mp3');
+    }
+
+    function noSmile(){
+      let popup = document.createElement("div");
+      popup.className = "popup";
+      popup.style.top = "50%";
+      popup.style.left = "40%";
+      popup.innerHTML = "No No sochna pdega 😁";
+      document.body.appendChild(popup);
+      popup.style.display = "block";
+      setTimeout(()=>popup.remove(),3000);
+    }
+
+    // Step 4
+    function showStep4(){
+      stopAudio();
+      document.body.style.backgroundImage = "url('bg_step4.jpg')";
+      document.getElementById("main").innerHTML = `
+        <img src="center_step4.jpg" width="300"><br>
+        <p>Hahaha mast thi photo aapki mene kheech li ✨</p>
+        <button class="btn" onclick="showStep5()">Next</button>
+      `;
+      playAudio('chunari.mp3');
+    }
+
+    // Step 5
+    function showStep5(){
+      stopAudio();
+      document.body.style.backgroundImage = "url('bg_step5.jpg')";
+      document.getElementById("main").innerHTML = ``;
+      playAudio('heartbeat.mp3');
+      setTimeout(showStep6,10000);
+    }
+
+    // Step 6
+    function showStep6(){
+      stopAudio();
+      document.body.style.backgroundImage = "url('bg_step6.jpg')";
+      document.getElementById("main").innerHTML = `
+        <img src="center_step6.jpg" width="300"><br>
+        <p>Kya dekh rhi ho surprise kahan hai hahahahahah...... Ulluuu banaya bada maza aya 😅</p>
+      `;
+      playAudio('laugh.mp3');
+      setTimeout(showStep65,10000);
+    }
+
+    // Step 6.5 (Question step)
+    function showStep65(){
+      stopAudio();
+      document.body.style.backgroundImage = "url('bg_step6.5.jpg')";
+      document.getElementById("main").innerHTML = `
+        <h2>Kya banogi Meri 😁</h2>
+        <div id="options"></div>
+      `;
+      playAudio('irritate.mp3');
+      let options = [
+        "Bhen ki bhabi😁","Maa ki Bahu🥲","Mere Bacho ki Mummy😅","Mere Aunty ke Bhanji😁",
+        "Wifeeey✨","Future♥️","Meri Jasmine","Meri Daktarrr sahiba","Meri Jaanaaaa✨","Each one🥳"
+      ];
+      let optDiv = document.getElementById("options");
+      options.forEach((opt,i)=>{
+        let btn = document.createElement("button");
+        btn.className="btn";
+        btn.innerText=opt;
+        btn.onclick=()=>checkAnswer(i);
+        optDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(i){
+      if(i==9){
+        showStep7();
+      } else {
+        spawnHeart();
+      }
+    }
+
+    function spawnHeart(){
+      let heart=document.createElement("div");
+      heart.className="heart";
+      heart.innerHTML="❤️";
+      heart.style.left=Math.random()*90+"vw";
+      heart.style.fontSize="60px";
+      document.body.appendChild(heart);
+      setTimeout(()=>heart.remove(),4000);
+    }
+
+    // Step 7
+    function showStep7(){
+      stopAudio();
+      document.body.style.backgroundImage = "url('bg_step7.jpg')";
+      document.getElementById("main").innerHTML = `
+        <img src="center_step7.jpg" width="300"><br>
+      `;
+      playAudio('pksong.mp3');
+      setTimeout(()=>{
+        document.getElementById("main").innerHTML=`
+          <video autoplay loop muted width="300">
+            <source src="final_video.mp4" type="video/mp4">
+          </video>
+          <p>Hey Jasmine just wanted to say you I will fall for you in zero gravity also😅 You are a blessing for me blessed by Allah swt♥️ thank u for coming in my life and InshaAllah we will do nikah, Allah swt will help us Ameen✨</p>
+        `;
+      },7000);
+    }
+
+    // Helper: Play audio
+    function playAudio(file){
+      stopAudio();
+      audio=new Audio(file);
+      audio.loop=true;
+      audio.play();
+    }
+
+    function stopAudio(){
+      if(audio){
+        audio.pause();
+        audio.currentTime=0;
+      }
+    }
+
+    // Start
+    showStep1();
+  </script>
+</body>
+</html>
